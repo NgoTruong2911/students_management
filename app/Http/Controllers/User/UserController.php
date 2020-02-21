@@ -123,6 +123,7 @@ class UserController extends Controller
                 abort(403);
             }
             $user = $this->userEloquentRepository->find($user_id, ['subjects']);
+            dd('a');
         } elseif ($user->hasRole('admin')) {
             $user = $this->userEloquentRepository->find($id, ['subjects']);
             $roles_all = $this->roleEloquentRepository->getAll();
