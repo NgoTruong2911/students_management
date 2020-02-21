@@ -25,28 +25,28 @@ class PointRequest extends FormRequest
      */
     public function rules()
     {
-        // collect($this->subject_point);
-        // dd(request()->all());
-        // dd($this);
         $data = [];
         $data = [
             'subject_point.*.point' => 'required|numeric|min:0|max:10'
         ];
         return $data;
     }
-    // public function messages()
-    // {
-    //     $messages = [];
-    //     $subjects = Subject::all();
-    //     foreach ($subjects as $subject) {
-    //         if (['subject_point.*'] == $subject->id) {
-    //             $messages['subject_point.*.point' . '.required'] = 'The field label "Subject Title ' . $subject->name . '" is required.';
-    //             $messages['subject_point.*.point' . '.numeric'] = 'The field label "Subject Title ' . $subject->name . '" is number not characters or words.';
-    //             $messages['subject_point.*.point' . '.min'] = 'The field label "Subject Title ' . $subject->name . '" must be less than :min subject->nameue.';
-    //             $messages['subject_point.*.point' . '.max'] = 'The field label "Subject Title ' . $subject->name . '" must be more than :max value.';
-    //         }
-    //     }
-    //     // dd($messages);
-    //     return $messages;
-    // }
+    public function messages()
+    {
+        $messages = [];
+        $subjects = Subject::all();
+        // dd($subjects);
+        foreach ($subjects as $subject) {
+            foreach ($this->subject_point as $key => $id) {
+                if ($key == $subject->id) {
+                    // dd($key.'.point');
+                    $messages['subject_point.*'.$key.'.point' . '.required'] = 'The field label "Subject Title ' . $subject->name . '" is not null.';
+                    $messages['subject_point.*'.$key.'.point' . '.numeric'] = 'The field label "Subject Title ' . $subject->name . '" is numeric.';
+                    $messages['subject_point.*'.$key.'.point' . '.min'] = 'The field label "Subject Title ' . $subject->name . '"more than 0 .';
+                    $messages['subject_point.*'.$key.'.point' . '.max'] = 'The field label "Subject Title ' . $subject->name . '" less than 10 max.';
+                }
+            }
+        }
+        return $messages;
+    }
 }
