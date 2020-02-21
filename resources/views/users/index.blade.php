@@ -130,82 +130,9 @@
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Update users</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="update_user" enctype='multipart/form-data'>
-                        {{-- <input type="hidden" name="_method" value="PUT"> --}}
 
-                        @method('PUT')
-                        <div class="modal-body">
-                            <div class="alert alert-danger print-error-msg" style="display:none">
-                                <ul></ul>
-                            </div>
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="birthday">Birthday</label>
-                                <input type="date" class="form-control" id="birthday" name="birthday">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone_number">Phone number</label>
-                                <input type="text" class="form-control" id="phone_number" name="phone_number">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email">
-                            </div>
-                            <div>
-                                <label for="faculty_id">Faculty name</label>
-                                <select class="form-control" name="faculty_id" id="faculty_id">
-                                </select>
-                            </div>
-                            <div>
-                                <label for="roles">Role</label>
-                                <select class="form-control" name="roles" id="roles">
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="gender">Gender : </label>
-                                <input type="radio" name="gender" class="female" value="1">Female
-                                <input type="radio" name="gender" class="male" value="2">Male
-                            </div>
-                            {{-- {{dd($user->id)}} --}}
-                            @if( (Auth::user()->roles[0]->name = 'user' && Auth::user()->password) || (Auth::user()->roles[0]->name = 'admin' && Auth::user()->password && Auth::user()->id == $user->id ) )
-                            <div class="form-group">
-                                <label for="current_password">Current password : </label>
-                                <input type="password" name="current_password" class="form-control" id="current_password"
-                            placeholder="Enter your Password">
-                            </div>
-                            @endif
-                            <div class="form-group">
-                                <label for="password">Password : </label>
-                                <input type="password" name="password" class="form-control" id="password"
-                        placeholder="Enter your new Password">
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Confirm Password : </label>
-                                <input type="password" name="confirm_password" class="form-control" id="password"
-                        placeholder="Enter your confirm new Password">
-                            </div>
-                            <div class="form-group">
-                                <label for="avatar">Avatar : </label>
-                                <input type="file" id="avatar" name="avatar">
-                                <img src="" class="rounded-lg ml-2 avatar" alt="avatar" width="100px" height="100px">
-                            </div>
-                            <input type="hidden" name="id">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save-update">Save changes</button>
-                        </div>
-                    </form>
+                    {{-- form ajax here --}}
+                    {{-- end-form-ajax-here --}}
                 </div>
             </div>
         </div>
@@ -252,44 +179,9 @@
                 type: 'get',
                 url: API + `users/${id}/edit`,
                 success: function (response) {
-                    console.log(response)
-                    let user = response.user;
-                    // console.log(response.user);
-                    let faculties = response.faculties;
-                    let subjects = response.subjects;
-                    let user_subjects = response.user_subjects;
-                    let roles = response.roles;
-                    console.log(response.roles);
-                    let user_role = response.userRole;
-                    console.log(user_role)
-                    $('input[name="email"]').val(user.email);
-                    $('input[name="name"]').val(user.name);
-                    $('input[name="birthday"]').val(user.birthday);
-                    $('input[name="phone_number"]').val(user.phone_number);
-                    $('input[name="age"]').val(user.age);
-                    $('input[name="id"]').val(user.id);
-                    $('#faculty_id').find('option').remove();
-                    $('#roles').find('option').remove();
-                    // let toReturn = false;
-                    faculties.map((faculty) => {
-                        $('select[name="faculty_id"]').append(
-                            `<option value="${faculty.id}" ${user.faculty_id == faculty.id ? 'selected' : ''}>${faculty.name}</option>`
-                        );
-                        if (user.gender == 1) {
-                            $('.female').prop("checked", true);
-                        } else {
-                            $('.male').prop("checked", true);
-                        }
-                    // toReturn = true;
-                    })
-                    // return toReturn;
-                    $('.avatar').attr("src", API + user.avatar);
-                    console.log(API + user.avatar);
-                    $.each( roles, function( key, value ) {
-                        $('select[name="roles"]').append(
-                            `<option value="${key}" ${key === user_role[0].id ? 'selected' : ''}>${value}</option>`
-                        );
-                    });
+                    console.log(response);
+                    $('.modal-content').html(response);
+
                 },
                 error: function (e) {
                     console.log('err', e);
@@ -322,7 +214,9 @@
                     } else {
                         $(row[6]).text('Male');
                     }
-                    $(row[7]).text(data.roles[0].name);
+                    if(data.roles){
+                        $(row[7]).text(data.roles[0].name);
+                    }
                     $('#exampleModal').modal('toggle');
 
                 },

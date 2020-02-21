@@ -21,7 +21,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Repositories\Faculty\FacultyEloquentRepository;
 use App\Repositories\Role\RoleEloquentRepository;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\VarDumper\VarDumper;
+
 
 class UserController extends Controller
 {
@@ -123,7 +123,6 @@ class UserController extends Controller
                 abort(403);
             }
             $user = $this->userEloquentRepository->find($user_id, ['subjects']);
-            dd('a');
         } elseif ($user->hasRole('admin')) {
             $user = $this->userEloquentRepository->find($id, ['subjects']);
             $roles_all = $this->roleEloquentRepository->getAll();
@@ -136,7 +135,8 @@ class UserController extends Controller
         //subject all
         $subjects = $subjects_all->diff($user_subjects);
         if (request()->ajax()) {
-            return response()->json(['user' => $user, 'faculties' => $faculties, 'roles' => $roles, 'userRole' => $userRole]);
+            // return response()->json(['user' => $user, 'faculties' => $faculties, 'roles' => $roles, 'userRole' => $userRole]);
+            return view('users.ajax',compact('user', 'faculties', 'subjects', 'user_subjects', 'roles', 'userRole'))->render();
         } else {
             return view('users.edit', compact('user', 'faculties', 'subjects', 'user_subjects', 'roles', 'userRole'));
         }
@@ -156,6 +156,7 @@ class UserController extends Controller
         $authUser = $this->userEloquentRepository->authUser();
         $user =  $this->userEloquentRepository->find($id);
         $req = $request->all();
+        $roles=null;
         if ($request->hasFile('avatar')) {
             $req['avatar'] = $this->userEloquentRepository->saveImage();
         }

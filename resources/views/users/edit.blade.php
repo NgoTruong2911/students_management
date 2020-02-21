@@ -125,8 +125,8 @@
                 @if((!empty ( $user->password ) && Auth::user()->hasRole('user')) || ( Auth::user()->hasRole('admin') &&
                 Auth::user()->id == $user->id && !empty ( Auth::user()->password )))
                 <div class="form-group">
-                    <label for="password">Old Password</label>
-                    <input type="password" name="current_password" class="form-control" id="password"
+                    <label for="current_password">Old Password</label>
+                    <input type="password" name="current_password" class="form-control" id="current_password"
                         value="{{old('current_password')}}" placeholder="Enter your Password">
                 </div>
                 @endif
@@ -142,7 +142,7 @@
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
                 <div class="form-group">
-                    <label for="password">Confirm New Password</label>
+                    <label for="password_confirmation">Confirm New Password</label>
                     <input type="password" name="password_confirmation" class="form-control" id="password_confirmation"
                         value="{{old('password_confirmation')}}" placeholder="Enter confirm new Password">
                 </div>
