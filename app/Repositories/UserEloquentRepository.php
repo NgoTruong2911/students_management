@@ -42,7 +42,7 @@ class UserEloquentRepository extends EloquentRepository
      * Get All
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function search($data = [], $number = 10)
+    public function search($data = [])
     {
 
         $users = $this->_model->newQuery();
@@ -80,7 +80,6 @@ class UserEloquentRepository extends EloquentRepository
         // }
         if (!empty($data['filter_point'])) {
             $subjects = Subject::all()->count(); //tổng số bản ghi của subjects
-
             if ($data['filter_point'] == 1) {
                 $users->whereHas('subjects', function ($query) use ($data, $subjects) {
 
@@ -96,13 +95,11 @@ class UserEloquentRepository extends EloquentRepository
                 }, '<', $subjects);
             }
         }
-
-        return $users->paginate($number);
+        return $users;
     }
 
     public function avgPoint($relation = [])
     {
-
         return $users = $this->_model->with($relation)->whereHas('userSubject', function ($query) {
             $query->selectRaw('user_id,AVG(user_subject.point) AS average_point')
                 ->groupBy('user_id')

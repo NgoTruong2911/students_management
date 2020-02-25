@@ -11,7 +11,7 @@
     @endif
     <!-- Content Header (Page header) -->
         <div class="container">
-            <form action="{{route('users.index')}}" method="GET" role="search">
+            <form id="index-form" action="{{route('users.index')}}" method="GET" role="search">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="point_number_form">Point min</label>
@@ -70,6 +70,16 @@
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
+        <div class="form-group mt-4" style="width:15%">
+            <form id="index-form">
+                <select id="paginate" name="paginate" class="form-control">
+                    <option value="15" @if($paginate==15) selected @endif>Default</option>
+                    <option value="50" @if($paginate==50) selected @endif>50</option>
+                    <option value="100" @if($paginate==100) selected @endif>100</option>
+                    <option value="200" @if($paginate==200) selected @endif>200</option>
+                </select>
+            </form>
+        </div>
         <div class="mt-4">{{ $users->links() }}</div>
         <table class="table">
             <thead>
@@ -81,7 +91,7 @@
                 <th scope="col">Email</th>
                 <th scope="col">Avatar</th>
                 <th scope="col">Gender</th>
-                <th scope="col">Role</th>
+                {{-- <th scope="col">Role</th> --}}
                 @if(Auth::user()->hasPermissionTo('users-create'))
                     <th scope="col"><a href="{{ route('users.create') }}" class="btn btn-success">Add +</a></th>
                 @endif
@@ -100,7 +110,7 @@
                     <td>{{ $user->email }}</td>
                     <td><img src="{{ asset($user->avatar) }}" alt="image" height="50" width="50"></td>
                     <td>{{ $user->gender==2?'Male':'Female' }}</td>
-                    <td>{{ $user->roles->first()->name }}</td>
+                    {{-- <td>{{ $user->roles->first()->name }}</td> --}}
                     @if(Auth::user()->hasPermissionTo('users-update'))
                         <td><a href="{{ route('users.edit',[$user->id]) }}" class="btn btn-primary">Update</a></td>
                     @endif
@@ -137,9 +147,6 @@
             </div>
         </div>
         <div><p>Showing {{$users->firstItem()}} to {{$users->lastItem()}}  of {{$users->total()}} </p></div>
-        <div class="form-group" style="width:15%">
-            <input type="text" class="form-control">
-        </div>
         <div>{{ $users->links() }}</div>
         <!-- /.content -->
     </div>
@@ -251,5 +258,12 @@
             $(this).parent().parent().find('.remove_input').remove();
 
         })
+    </script>
+
+    <script>
+         document.getElementById('paginate').onchange = function() {
+            window.location = "{!! $users->url(1) !!}&paginate=" + this.value;
+            console.log(this.value);
+         }
     </script>
 @endsection

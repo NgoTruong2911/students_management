@@ -46,11 +46,12 @@ class UserController extends Controller
      * Old input with flash
      * @var users get all users match requests
      */
-    public function index()
+    public function index(Request $request)
     {
         request()->flash();
-        $users = $this->userEloquentRepository->search(request()->all(), 5);
-        return view('users.index', compact('users'));
+        $paginate = $request->paginate ? $request->paginate : 15;
+        $users = $this->userEloquentRepository->search(request()->all())->paginate($paginate)->appends($request->all());
+        return view('users.index', compact('users','paginate'));
     }
 
     /**
