@@ -91,7 +91,7 @@
                 <th scope="col">Email</th>
                 <th scope="col">Avatar</th>
                 <th scope="col">Gender</th>
-                {{-- <th scope="col">Role</th> --}}
+                <th scope="col">Role</th>
                 @if(Auth::user()->hasPermissionTo('users-create'))
                     <th scope="col"><a href="{{ route('users.create') }}" class="btn btn-success">Add +</a></th>
                 @endif
@@ -110,7 +110,7 @@
                     <td>{{ $user->email }}</td>
                     <td><img src="{{ asset($user->avatar) }}" alt="image" height="50" width="50"></td>
                     <td>{{ $user->gender==2?'Male':'Female' }}</td>
-                    {{-- <td>{{ $user->roles->first()->name }}</td> --}}
+                    <td>{{ $user->roles->first()->name }}</td>
                     @if(Auth::user()->hasPermissionTo('users-update'))
                         <td><a href="{{ route('users.edit',[$user->id]) }}" class="btn btn-primary">Update</a></td>
                     @endif
