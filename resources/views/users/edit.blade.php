@@ -3,18 +3,10 @@
     @section('content')
 
     <div>
-        {{-- @foreach ($errors->all() as $error)
-                <div>{{ $error }}</div>
-    @endforeach --}}
-
 </div>
 <div class="content-wrapper">
 
     <div class="container">
-        <!-- Content Header (Page header) -->
-        {{-- @if($errors)
-                    {{ dd($errors)}}
-        @endif --}}
         @if(session('status'))
         <div class="alert alert-success">
             {{ session('status') }}
@@ -164,32 +156,44 @@
                 @enderror
                 @if(empty($user->id) )
                 <div class="form-group">
-                    <label for="roles">Role : </label>
-                    <select class="form-control" name="roles" id="roles">
-                        @foreach ($roles as $role =>$val)
-                        <option value="{{$role}}">{{$val}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <a class="btn btn-primary  mb-3 mt-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Role
+                    </a>
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body">
+                            @foreach($roles as $role =>$val)
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="roles[]" id="inlineRadio1" value="{{$role}}" }}>
+                                    <label class="form-check-label" for="inlineRadio1">{{$val}}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                <br/>
                 @elseif( empty($userRole) || empty($roles))
-
                 @else
-                <div class="form-group">
-                    <label for="roles">Role : </label>
-                    <select class="form-control" name="roles" id="roles">
-                        @foreach ($roles as $role =>$val)
+                <a class="btn btn-primary mb-3 mt-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Role
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        @foreach($roles as $role =>$val)
                         @foreach ($userRole as $rl)
-                        <option value="{{$role}}" {{$rl->id == $role ? 'selected' : '' }}>{{$val}}</option>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="roles[]" id="inlineRadio" value="{{ $role }}" {{ $rl->id == $role ? 'checked' : '' }}>
+                                <label class="form-check-label" for="inlineRadio">{{$val}}</label>
+                            </div>
                         @endforeach
                         @endforeach
-                    </select>
+                    </div>
                 </div>
+            <br/>
                 @endif
                 @error('roles')
                 <div class="text-danger"> {{$message}} </div>
                 @enderror
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary ">Submit</button>
             </form>
             {{-- {{ json_encode($errors->all()) }} --}}
             {{-- Update Point --}}
