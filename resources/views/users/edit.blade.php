@@ -294,15 +294,18 @@
                     <div class="collapse multi-collapse" id="multiCollapseExample2">
                         <div class="card card-body">
                             <div class="subject-list">
+                                @if(Auth::user()->hasRole('admin'))
                                 <ul>
                                     @if(isset(old()['subject_id']))
-                                    @php
-                                    $subject_id = [];
-                                    foreach ($subjects as $subject) {
-                                    $subject_id[] = $subject->id;
-                                    }
-                                    $result_diff = array_diff($subject_id,old()['subject_id']);
-                                    @endphp
+                                        @php
+                                        $subject_id = [];
+                                        // dd(old());
+                                        foreach ($subjects as $subject) {
+                                        $subject_id[] = $subject->id;
+                                        }
+                                        $result_diff = array_diff($subject_id,old()['subject_id']);
+                                        // dd($result_diff);
+                                        @endphp
                                     @foreach ( $subjects as $subject )
                                     <li class="subject"
                                         value="{{ in_array($subject->id,$result_diff) ? $subject->id : '' }}"
@@ -311,22 +314,35 @@
                                         {{ $subject->name }}
                                     </li>
                                     @endforeach
+                                    {{-- no bug here --}}
+                                    {{-- {{var_dump($user_subjects)}} --}}
                                     @foreach ( $user_subjects as $user_subject )
                                     <li class="subject"
-                                        value="{{ !in_array($user_subject->pivot->subject_id,old()['subject_id']) ? $user_subject->pivot->subject_id : '' }}"
-                                        {{ !in_array($user_subject->pivot->subject_id,old()['subject_id']) ? '' : " style = display:none; " }}>
+                                        value="{{ in_array($user_subject->pivot->subject_id,old()['subject_id']) ? '' : $user_subject->pivot->subject_id }}"
+                                        {{ in_array($user_subject->pivot->subject_id,old()['subject_id']) ? " style = display:none; " : '' }}>
                                         <input type="checkbox">
                                         {{ $user_subject->name }}
                                     </li>
                                     @endforeach
+                                    {{-- bug here --}}
                                     @else
                                     @foreach ($subjects as $subject)
                                     <li class="subject" value="{{ $subject->id }}"><input type="checkbox">
                                         {{ $subject->name }}
                                     </li>
                                     @endforeach
+                                    {{-- no bug here --}}
                                     @endif
                                 </ul>
+                                @else
+                                <ul>
+                                    @foreach ($subjects as $subject)
+                                    <li class="subject" value="{{ $subject->id }}"><input type="checkbox">
+                                        {{ $subject->name }}
+                                    </li>
+                                    @endforeach
+                                </ul>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -344,135 +360,11 @@
 {{-- {{dd(old())}} --}}
 @if(Auth::user()->hasRole('admin'))
 @section('script')
-<script>
-    $(document).on('click' , '.remove', function () {
-                // console.log('subject_name');
-                let subject_id = $(this).parent().find('.remove_input').data('subject_id');
-                let subject_name = $(this).parent().find('.remove_input').data('subject_name');
-                 console.log(subject_name);
-                 console.log(subject_id);
-                    $(this).parent().parent().find('.remove_input').remove();
-                let li = `<li class="subject" value=${subject_id}>
-                <input type="checkbox">${subject_name}</li>`
-                    $('.subject-list').children().append(li);
-                //  console.log($('.subject-list').children());
-            })
-            $(document).on('click','.subject', function () {
-                // console.log('subject');
-                const html = ` <div class="form-group">
-                                                    <ul class="list-group  w-45">
-                                                        <li class="remove_input"><label
-                                                                for="${$(this).val()}">${$(this).text()}</label></li>
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center remove_input">
-                                                            <input type="number"
-                                                                   name="subject_point[${$(this).val()}][point]"
-                                                                   class="form-control mt-4 remove_input"
-                                                                   data-subject_id="${$(this).val()}"
-                                                                   data-subject_name="${$(this).text()}" id="${$(this).val()}" >
-                                                            <button type="button" class="remove btn btn-link "><span
-                                                                    class="badge badge-primary badge-pill"><i
-                                                                        class="fa fa-times"
-                                                                        aria-hidden="true"></i></span></button>
-                                                            <input type="hidden" value="${$(this).text()}" name="subject_name_hidden[]">
-                                                            <input type="hidden" value="${$(this).val()}" name="subject_id[]">
-                                                            <input type="hidden" name="point[]">
-                                                        </li>
-                                                    </ul>
-                        </div>`
-                $('.list-edit-subjects').append(html);
-                // console.log(html);
-                $(this).hide();
-                // console.log('subject_name html');
-            })
-
-</script>
+<script src="{{asset('js/users/edit-admin.js')}}"></script>
 @endsection
 @else
 @section('script')
-<script>
-    $(document).on('click' , '.remove', function () {
-                // console.log('subject_name');
-                let subject_id = $(this).parent().find('.remove_input').data('subject_id');
-                let subject_name = $(this).parent().find('.remove_input').data('subject_name');
-                 console.log(subject_name);
-                 console.log(subject_id);
-                    $(this).parent().parent().find('.remove_input').remove();
-                let li = `<li class="subject" value=${subject_id}>
-                <input type="checkbox">${subject_name}</li>`
-                    $('.subject-list').children().append(li);
-                //  console.log($('.subject-list').children());
-            })
-            $(document).on('click','.subject', function () {
-                // console.log('subject');
-                const html = ` <div class="form-group">
-                                                    <ul class="list-group  w-45">
-                                                        <li class="remove_input"><label
-                                                                for="${$(this).val()}">${$(this).text()}</label></li>
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center remove_input">
-                                                            <input type="number"
-                                                                   name="subject_point[${$(this).val()}][point]"
-                                                                   class="form-control mt-4 remove_input" readonly value="0"
-                                                                   data-subject_id="${$(this).val()}"
-                                                                   data-subject_name="${$(this).text()}" id="${$(this).val()}" >
-                                                            <button type="button" class="remove btn btn-link "><span
-                                                                    class="badge badge-primary badge-pill"><i
-                                                                        class="fa fa-times"
-                                                                        aria-hidden="true"></i></span></button>
-                                                            <input type="hidden" value="${$(this).text()}" name="subject_name_hidden[]">
-                                                            <input type="hidden" value="${$(this).val()}" name="subject_id[]">
-                                                            <input type="hidden" name="point[]">
-                                                        </li>
-                                                    </ul>
-                        </div>`
-                $('.list-edit-subjects').append(html);
-                // console.log(html);
-                $(this).hide();
-                // console.log('subject_name html');
-            })
-
-</script>
+<script src="{{asset('js/users/edit-user.js')}}"></script>
 @endsection
 @endif
-{{-- @section('script')
-<script>
-    $(document).on('click' , '.remove', function () {
-                // console.log('subject_name');
-                let subject_id = $(this).parent().find('.remove_input').data('subject_id');
-                let subject_name = $(this).parent().find('.remove_input').data('subject_name');
-                //  console.log(subject_name);
-                    $(this).parent().parent().find('.remove_input').remove();
-                let li = `<li class="subject" value=${subject_id}><input type="checkbox">${subject_name}</li>`
-                    $('.subject-list').children().append(li);
-                 console.log($('.subject-list').children());
-            })
-            $(document).on('click','.subject', function () {
-                // console.log('subject');
-                const html = ` <div class="form-group">
-                                                    <ul class="list-group">
-                                                        <li class="remove_input"><label
-                                                                for="${$(this).val()}">${$(this).text()}</label></li>
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center remove_input">
-                                                            <input type="number"
-                                                                   name="subject_point[${$(this).val()}][point]"
-                                                                   class="form-control mt-4 remove_input"
-                                                                   data-subject_id="${$(this).val()}"
-                                                                   data-subject_name="${$(this).text()}" id="${$(this).val()}" >
-                                                            <button type="button" class="remove btn btn-link "><span
-                                                                    class="badge badge-primary badge-pill"><i
-                                                                        class="fa fa-times"
-                                                                        aria-hidden="true"></i></span></button>
-                                                            <input type="hidden" value="${$(this).text()}" name="subject_name_hidden[]">
-                                                            <input type="hidden" value="${$(this).val()}" name="subject_id[]">
-                                                            <input type="hidden" name="point[]">
-                                                        </li>
-                                                    </ul>
-                        </div>`
-                $('.list-edit-subjects').append(html);
-                // console.log(html);
-                $(this).hide();
-                // console.log('subject_name html');
-            })
-
-</script>
-@endsection --}}
 </div>

@@ -32,7 +32,7 @@
                 @endforeach
             </select>
         </div>
-        @if((Auth::user()->hasRole('admin') && Auth::user()->password && Auth::user()->id != $user->id ))
+        @if((Auth::user()->hasRole('admin') && Auth::user()->id != $user->id ))
         <div>
             <label for="roles">Role</label>
             <select class="form-control" name="roles" id="roles">

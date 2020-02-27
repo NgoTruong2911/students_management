@@ -34,16 +34,17 @@ class PointRequest extends FormRequest
     public function messages()
     {
         $messages = [];
-        $subjects = Subject::all();
-        // dd($subjects);
-        foreach ($subjects as $subject) {
-            foreach ($this->subject_point as $key => $id) {
-                if ($key == $subject->id) {
-                    // dd($key.'.point');
-                    $messages['subject_point.*'.$key.'.point' . '.required'] = 'The field label "Subject Title ' . $subject->name . '" is not null.';
-                    $messages['subject_point.*'.$key.'.point' . '.numeric'] = 'The field label "Subject Title ' . $subject->name . '" is numeric.';
-                    $messages['subject_point.*'.$key.'.point' . '.min'] = 'The field label "Subject Title ' . $subject->name . '"more than 0 .';
-                    $messages['subject_point.*'.$key.'.point' . '.max'] = 'The field label "Subject Title ' . $subject->name . '" less than 10 max.';
+        if(!empty($this->subject_point)){
+            $subjects = Subject::all();
+            foreach ($subjects as $subject) {
+                foreach ($this->subject_point as $key => $id) {
+                    if ($key == $subject->id) {
+                        // dd($key.'.point');
+                        $messages['subject_point.*'.$key.'.point' . '.required'] = 'The field label "Subject Title ' . $subject->name . '" is not null.';
+                        $messages['subject_point.*'.$key.'.point' . '.numeric'] = 'The field label "Subject Title ' . $subject->name . '" is numeric.';
+                        $messages['subject_point.*'.$key.'.point' . '.min'] = 'The field label "Subject Title ' . $subject->name . '"more than 0 .';
+                        $messages['subject_point.*'.$key.'.point' . '.max'] = 'The field label "Subject Title ' . $subject->name . '" less than 10 max.';
+                    }
                 }
             }
         }

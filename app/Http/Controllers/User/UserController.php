@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
+// use Illuminate\Support\Arr;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Http\Requests\Users\PointRequest;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use App\Repositories\RoleAndPermisson\RoleAndPermissonEloquentRepository;
+// use Spatie\Permission\Models\Role;
+// use Spatie\Permission\Models\Permission;
+// use App\Repositories\RoleAndPermisson\RoleAndPermissonEloquentRepository;
 use App\Repositories\RepositoryInterface;
 use App\Repositories\Subject\SubjectEloquentRepository;
 use Illuminate\Http\Request;
 use App\Jobs\SendMailForExpulsion;
-use Illuminate\Http\RedirectResponse;
+// use Illuminate\Http\RedirectResponse;
 use App\Repositories\Faculty\FacultyEloquentRepository;
 use App\Repositories\Role\RoleEloquentRepository;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -51,7 +51,13 @@ class UserController extends Controller
         request()->flash();
         $paginate = $request->paginate ? $request->paginate : 15;
         $users = $this->userEloquentRepository->search(request()->all())->paginate($paginate)->appends($request->all());
-        return view('users.index', compact('users','paginate'));
+        if (\Request::is('api*')) {
+            return response()->json(compact('users','paginate'));
+            exit();
+        }else{
+            return view('users.index', compact('users','paginate'));
+            exit();
+        }
     }
 
     /**
@@ -206,6 +212,7 @@ class UserController extends Controller
 
     public function createPoint(PointRequest $request, $id)
     {
+        // dd($request->all());
         $auth_user = $this->userEloquentRepository->authUser();
         if ($auth_user->hasRole('admin')) {
             $users = $this->userEloquentRepository->find($id, ['subjects']);

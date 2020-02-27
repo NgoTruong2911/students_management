@@ -24,3 +24,7 @@ use Illuminate\Http\Request;
 //     Route::get('logout','AuthController@logout');
 //     Route::get('index','AuthController@index');
 // });
+
+// Route::group(['middleware' => 'auth'], function () {
+    Route::get('users','User\UserController@index')->name('api-users');
+// });
