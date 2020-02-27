@@ -77,8 +77,9 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return users/index with status flash
      */
-    public function store(UpdateUserRequest $request)
+    public function store(Request $request)
     {
+        // dd($request->all());
         $req = $request->all();
         $req['age'] = Carbon::parse($request->birthday)->age;
         $req['avatar'] = $this->userEloquentRepository->saveImage();
@@ -154,6 +155,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
+        // dd($request->all());
         $authUser = $this->userEloquentRepository->authUser();
         $user =  $this->userEloquentRepository->find($id);
         $req = $request->all();
@@ -170,7 +172,9 @@ class UserController extends Controller
             }
             if ($request->input('roles')) {
                 $role = $request->input('roles');
+                // dd($role);
             }
+            // dd($role);
             $save = $this->userEloquentRepository->update($id, $req)->syncRoles($role);
             if (request()->ajax()) {
 
