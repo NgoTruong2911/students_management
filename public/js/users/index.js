@@ -97,14 +97,11 @@
                       </div>`
             $('.list-edit-subjects').append(html);
             $(this).hide();
-        })
+        });
         $('.remove').click(function () {
             $(this).parent().parent().find('.remove_input').remove();
 
-        })
+        });
 
-         document.getElementById('paginate').onchange = function() {
-            window.location = "{!! $users->url(1) !!}&paginate=" + this.value;
-            console.log(this.value);
-         }
+        
 

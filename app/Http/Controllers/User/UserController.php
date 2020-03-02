@@ -52,10 +52,10 @@ class UserController extends Controller
         $paginate = $request->paginate ? $request->paginate : 15;
         $users = $this->userEloquentRepository->search(request()->all())->paginate($paginate)->appends($request->all());
         if (\Request::is('api*')) {
-            return response()->json(compact('users','paginate'));
+            return response()->json(compact('users', 'paginate'));
             exit();
-        }else{
-            return view('users.index', compact('users','paginate'));
+        } else {
+            return view('users.index', compact('users', 'paginate'));
             exit();
         }
     }
@@ -72,7 +72,7 @@ class UserController extends Controller
         $subjects = $this->subjectEloquentRepository->getAll();
         $user = new User();
         $roles_all = $this->roleEloquentRepository->getAll();
-        $roles = $roles_all->pluck('name', 'id')->all();
+        $roles = $roles_all->pluck('name', 'name')->all();
         $faculties =  $this->facultyEloquentRepository->getAll();;
         return view('users.edit', compact('user', 'faculties', 'subjects', 'roles'));
     }
@@ -85,7 +85,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $req = $request->all();
         $req['age'] = Carbon::parse($request->birthday)->age;
         $req['avatar'] = $this->userEloquentRepository->saveImage();
@@ -121,8 +120,6 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        // request()->
-
         $user = $this->userEloquentRepository->authUser();
         $roles = $userRole = null;
         $user_id = strval($user->id);
@@ -134,17 +131,15 @@ class UserController extends Controller
         } elseif ($user->hasRole('admin')) {
             $user = $this->userEloquentRepository->find($id, ['subjects']);
             $roles_all = $this->roleEloquentRepository->getAll();
-            $roles = $roles_all->pluck('name', 'id')->all();
-            $userRole = $user->roles->all();
+            $roles = $roles_all->pluck('name', 'name')->all();
+            $userRole = $user->roles->pluck('name', 'name')->toArray();
         }
         $user_subjects = $user->subjects;
         $faculties =  $this->facultyEloquentRepository->getAll();
         $subjects_all = $this->subjectEloquentRepository->getAll();
-        //subject all
         $subjects = $subjects_all->diff($user_subjects);
         if (request()->ajax()) {
-            // return response()->json(['user' => $user, 'faculties' => $faculties, 'roles' => $roles, 'userRole' => $userRole]);
-            return view('users.ajax',compact('user', 'faculties', 'subjects', 'user_subjects', 'roles', 'userRole'))->render();
+            return view('users.ajax', compact('user', 'faculties', 'subjects', 'user_subjects'))->render();
         } else {
             return view('users.edit', compact('user', 'faculties', 'subjects', 'user_subjects', 'roles', 'userRole'));
         }
@@ -161,38 +156,36 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
-        // dd($request->all());
         $authUser = $this->userEloquentRepository->authUser();
         $user =  $this->userEloquentRepository->find($id);
         $req = $request->all();
-        $roles=null;
+        $roles = null;
         if ($request->hasFile('avatar')) {
             $req['avatar'] = $this->userEloquentRepository->saveImage();
         }
         if ($authUser->hasRole('admin') && $authUser->id != $id) {
             if ($request->password) {
                 $req['password'] = bcrypt($req['password']);
-            }
-            else{
+            } else {
                 unset($req['password']);
+            }
+            if (request()->ajax()) {
+                return $this->userEloquentRepository->update($id, $req);
             }
             if ($request->input('roles')) {
                 $role = $request->input('roles');
-                // dd($role);
+                $save = $this->userEloquentRepository->update($id, $req)->syncRoles($role);
+            } else {
+                $save = $this->userEloquentRepository->update($id, $req);
+                foreach ($user->roles as $rol) {
+                    $user->removeRole($rol);
+                }
             }
-            // dd($role);
-            $save = $this->userEloquentRepository->update($id, $req)->syncRoles($role);
-            if (request()->ajax()) {
-
-                return $save;
-            }
-                return redirect()->route('users.index')->with('status', 'Update Successfull');
-
+            return redirect()->route('users.index')->with('status', 'Update Successfull');
         } elseif ($authUser->id == $id) {
-            if($request->password){
+            if ($request->password) {
                 $req['password'] = bcrypt($req['password']);
-            }
-            else{
+            } else {
                 unset($req['password']);
             }
             $save = $this->userEloquentRepository->update($id, $req);

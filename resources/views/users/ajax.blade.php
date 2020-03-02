@@ -32,19 +32,6 @@
                 @endforeach
             </select>
         </div>
-        @if((Auth::user()->hasRole('admin') && Auth::user()->id != $user->id ))
-        <div>
-            <label for="roles">Role</label>
-            <select class="form-control" name="roles" id="roles">
-                @foreach ($roles as $role =>$val)
-                    @foreach ($userRole as $rl)
-                        <option value="{{$role}}" {{$rl->id == $role ? 'selected' : '' }}>{{$val}}</option>
-                    @endforeach
-                @endforeach
-            </select>
-        </div>
-        @else
-        @endif
         <div class="form-group">
             <label for="gender">Gender : </label>
             @if($user->gender==1)

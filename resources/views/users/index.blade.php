@@ -110,7 +110,13 @@
                     <td>{{ $user->email }}</td>
                     <td><img src="{{ asset($user->avatar) }}" alt="image" height="50" width="50"></td>
                     <td>{{ $user->gender==2?'Male':'Female' }}</td>
-                    <td>{{ $user->roles->first()->name }}</td>
+                    <td>
+                        @if($user->roles)
+                            @foreach($user->roles as $roleName)
+                                <a>{{$roleName->name}}</a>
+                            @endforeach
+                        @endif
+                    </td>
                     @if(Auth::user()->hasPermissionTo('users-update'))
                         <td><a href="{{ route('users.edit',[$user->id]) }}" class="btn btn-primary">Update</a></td>
                     @endif
@@ -153,4 +159,10 @@
 @endsection
 @section('script')
 <script src="{{asset('js/users/index.js')}}"></script>
+<script>
+document.getElementById('paginate').onchange = function() {
+    window.location = window.location."&paginate=" + this.value;
+    console.log(this.value);
+ }
+ </script>
 @endsection
