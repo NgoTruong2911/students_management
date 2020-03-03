@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,7 +15,7 @@ class  User extends Authenticatable
     use HasRoles;
 
     protected $fillable = [
-        'name', 'birthday', 'phone_number', 'email', 'password', 'faculty_id', 'gender', 'avatar', 'age'
+        'name', 'birthday', 'phone_number', 'email', 'password', 'faculty_id', 'gender', 'avatar', 'age','id'
     ];
 
     protected $hidden = [
@@ -44,11 +44,8 @@ class  User extends Authenticatable
         return $this->hasMany(User_subject::class, 'user_id');
     }
 
-    // public function avg($point)
-    // {
-    //     $avg_point =  $this->userSubject()
-    //                             ->pluck('point')
-    //                             ->avg();
-    //     return $avg_point < $point;
-    // }
+    public function rolesName()
+    {
+        return $this->belongsToMany(Role::class,'model_has_roles','model_id','role_id');
+    }
 }

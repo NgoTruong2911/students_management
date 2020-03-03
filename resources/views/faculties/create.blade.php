@@ -8,10 +8,16 @@
                 {!! Form::label('name', 'Enter name here') !!}
                 {!! Form::text('name', $value = null, ['class' => 'form-control', 'placeholder' => 'enter name faculty']) !!}
             </div>
+            @error('name')
+                <p class="text-danger">{{$message}}</p>
+            @enderror
             <div class="form-group">
                 {!! Form::label('description', 'Enter description') !!}
                 {!! Form::textarea('description', $value=null, ['class' => 'form-control'],['row' =>'3']) !!}
             </div>
+            @error('description')
+                <p class="text-danger">{{$message}}</p>
+            @enderror
         {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
         {!! Form::close() !!}
         <!-- /.content -->
