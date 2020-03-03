@@ -18,7 +18,7 @@
 
     //  popup ajax update user
 
-        const API = window.location.href;
+        const API = `http://localhost:8000/users`;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -103,5 +103,5 @@
 
         });
 
-        
+
 
