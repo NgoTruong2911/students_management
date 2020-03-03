@@ -114,7 +114,6 @@
                     @foreach($user->rolesName as $role)
                     <a>{{$role->name}}</a>
                     @endforeach
-
                 </td>
                 @if(Auth::user()->hasPermissionTo('users-update'))
                 <td><a href="{{ route('users.edit',[$user->id]) }}" class="btn btn-primary">Update</a></td>
