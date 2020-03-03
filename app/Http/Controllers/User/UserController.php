@@ -43,7 +43,6 @@ class UserController extends Controller
         request()->flash();
         $paginate = $request->paginate ? $request->paginate : 15;
         $users = $this->userEloquentRepository->search(request()->all())->with('rolesName')->paginate($paginate)->appends($request->all());
-        // dd($users);
         if (\Request::is('api*')) {
             return response()->json(compact('users', 'paginate'));
             exit();
@@ -63,11 +62,10 @@ class UserController extends Controller
     public function create()
     {
         $subjects = $this->subjectEloquentRepository->getAll();
-        $user = new User();
         $roles_all = $this->roleEloquentRepository->getAll();
         $roles = $roles_all->pluck('name', 'name')->all();
         $faculties =  $this->facultyEloquentRepository->getAll();;
-        return view('users.edit', compact('user', 'faculties', 'subjects', 'roles'));
+        return view('users.create', compact('faculties', 'subjects', 'roles'));
     }
 
     /**
@@ -76,7 +74,7 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return users/index with status flash
      */
-    public function store(Request $request)
+    public function store(UpdateUserRequest $request)
     {
         $req = $request->all();
         $req['age'] = Carbon::parse($request->birthday)->age;

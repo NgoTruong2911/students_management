@@ -35,9 +35,9 @@ class UserRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required|min:3|max:191',
             'gender' => 'required',
+            'role' => 'required',
             'faculty_id' => 'required',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            
         ];
     }
 
