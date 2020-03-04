@@ -288,7 +288,8 @@
             <div class="text-danger">{{ $message }}</div>
             @enderror
             @endif
-
+            @if(Auth::user()->hasRole('admin') &&
+            Auth::user()->id != $user->id)
             @if(empty($userRole) )
             <div class="form-group">
                 <a class="btn btn-primary  mb-3 mt-3" data-toggle="collapse" href="#collapseExample" role="button"
@@ -325,9 +326,10 @@
                 </div>
                 <br />
                 @endif
-                @error('roles')
+            @endif
+            @error('roles')
                 <div class="text-danger"> {{$message}} </div>
-                @enderror
+            @enderror
 
                 <button type="submit" class="btn btn-primary ">Submit</button>
         </form>

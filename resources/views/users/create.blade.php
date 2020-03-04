@@ -65,23 +65,6 @@
         @error('avatar')
         <p class="text-danger">{{ $message }}</p>
         @enderror
-        {{-- <div class="form-group">
-            <a class="btn btn-primary  mb-3 mt-3" data-toggle="collapse" href="#collapseExample" role="button"
-                aria-expanded="false" aria-controls="collapseExample">
-                Role
-            </a>
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body">
-                    @foreach($roles as $role =>$val)
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="roles[]" id="inlineRadio1"
-                            value="{{$role}}" }}>
-                        <label class="form-check-label" for="inlineRadio1">{{$val}}</label>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div> --}}
         <div class="form-group">
             <label for="roles">Roles :<a class="text-danger">*</a> </label>
             @foreach($roles as $role =>$val)

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -8,14 +9,16 @@ use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class  User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+    use Sluggable;
 
     protected $fillable = [
-        'name', 'birthday', 'phone_number', 'email', 'password', 'faculty_id', 'gender', 'avatar', 'age','id'
+        'name', 'birthday', 'phone_number', 'email', 'password', 'faculty_id', 'gender', 'avatar', 'age', 'id'
     ];
 
     protected $hidden = [
@@ -46,6 +49,15 @@ class  User extends Authenticatable
 
     public function rolesName()
     {
-        return $this->belongsToMany(Role::class,'model_has_roles','model_id','role_id');
+        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');
+    }
+
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
     }
 }

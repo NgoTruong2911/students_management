@@ -129,6 +129,7 @@ class UserController extends Controller
         $faculties =  $this->facultyEloquentRepository->getAll();
         $subjects_all = $this->subjectEloquentRepository->getAll();
         $subjects = $subjects_all->diff($user_subjects);
+        // dd($roles);
         if (request()->ajax()) {
             return view('users.ajax', compact('user', 'faculties', 'subjects', 'user_subjects'))->render();
         } else {
