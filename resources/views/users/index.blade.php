@@ -126,7 +126,7 @@
                     </button>
                 </td>
                 @endif
-                <td><a href="{{ route('users.show',[$user->id]) }}" class="btn btn-primary">Show</a></td>
+                <td><a href="{{ route('users.show',[$user->slug]) }}" class="btn btn-primary">Show</a></td>
                 @if(Auth::user()->hasAnyPermission(['users-delete','users-show']))
                 <td>
                     <form action="{{ route('users.destroy',$user->id) }}" method="POST">

@@ -42,7 +42,7 @@ class UserController extends Controller
     {
         request()->flash();
         $paginate = $request->paginate ? $request->paginate : 15;
-        $users = $this->userEloquentRepository->search(request()->all())->with('rolesName')->paginate($paginate)->appends($request->all());
+        $users = $this->userEloquentRepository->search(request()->all())->orderby('updated_at','desc')->with('rolesName')->paginate($paginate)->appends($request->all());
         if (\Request::is('api*')) {
             return response()->json(compact('users', 'paginate'));
             exit();
@@ -81,6 +81,7 @@ class UserController extends Controller
         $req['avatar'] = $this->userEloquentRepository->saveImage();
         $req['password'] = bcrypt($req['password']);
         $user = $this->userEloquentRepository->create($req);
+        // dd($user);
         $user->assignRole($req['roles']);
         return redirect()->route('users.index')->with('status', 'Create Successfull');
     }
@@ -91,10 +92,11 @@ class UserController extends Controller
      * @param int $id
      * @return users/$id/show
      */
-    public function show($id)
+    public function show($slug)
     {
-
-        $user = $this->userEloquentRepository->find($id);
+        $user = $this->userEloquentRepository->getSlug($slug);
+        // dd($collect = collect($user));
+        // dd($user);
         return view('users.show', compact('user'));
     }
 

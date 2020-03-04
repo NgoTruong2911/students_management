@@ -20,6 +20,7 @@ $factory->define(User::class, function (Faker $faker) {
         'avatar' => 'images/1582166691.jpeg',
         'faculty_id' => $faker->randomElement($faculty),
         'password' => Hash::make('1234567'),
+        'slug' => Str::slug($faker->name),
         'remember_token' => Str::random(10) // password
     ];
 });

@@ -106,4 +106,10 @@ class UserEloquentRepository extends EloquentRepository
                 ->havingRaw('average_point < ?', [5]);
         })->get();
     }
+
+    public function getSlug($slug)
+    {
+        $user =$this->_model->newQuery();
+        return $user->where('slug', $slug)->first();
+    }
 }

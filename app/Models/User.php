@@ -18,7 +18,7 @@ class  User extends Authenticatable
     use Sluggable;
 
     protected $fillable = [
-        'name', 'birthday', 'phone_number', 'email', 'password', 'faculty_id', 'gender', 'avatar', 'age', 'id'
+        'name', 'birthday', 'phone_number', 'email', 'password', 'faculty_id', 'gender', 'avatar', 'age', 'id', 'slug'
     ];
 
     protected $hidden = [
@@ -56,7 +56,7 @@ class  User extends Authenticatable
     {
         return [
             'slug' => [
-                'source' => 'title'
+                'source' => 'name'
             ]
         ];
     }
