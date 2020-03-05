@@ -76,7 +76,7 @@
 
             <button type="submit" class="btn btn-primary">Update Point</button>
             </form>
-            <div class="w-50 ml-5">
+            <div class="w-50 ml-5 mt-4">
                 <p>
                     <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button"
                         aria-expanded="false" aria-controls="multiCollapseExample1">Các môn đã học</a>
@@ -341,10 +341,12 @@
 @if(Auth::user()->hasRole('admin'))
 @section('script')
 <script src="{{asset('js/users/edit-admin.js')}}"></script>
+<script>$('.collapse').collapse('show')</script>
 @endsection
 @else
 @section('script')
 <script src="{{asset('js/users/edit-user.js')}}"></script>
+<script>$('.collapse').collapse('show')</script>\
 @endsection
 @endif
 </div>

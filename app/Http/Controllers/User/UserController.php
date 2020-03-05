@@ -63,9 +63,10 @@ class UserController extends Controller
     {
         $subjects = $this->subjectEloquentRepository->getAll();
         $roles_all = $this->roleEloquentRepository->getAll();
+        $subjects = $this->subjectEloquentRepository->getAll();
         $roles = $roles_all->pluck('name', 'name')->all();
         $faculties =  $this->facultyEloquentRepository->getAll();;
-        return view('users.create', compact('faculties', 'subjects', 'roles'));
+        return view('users.create', compact('faculties', 'subjects', 'roles','subjects'));
     }
 
     /**
@@ -81,7 +82,6 @@ class UserController extends Controller
         $req['avatar'] = $this->userEloquentRepository->saveImage();
         $req['password'] = bcrypt($req['password']);
         $user = $this->userEloquentRepository->create($req);
-        // dd($user);
         $user->assignRole($req['roles']);
         return redirect()->route('users.index')->with('status', 'Create Successfull');
     }

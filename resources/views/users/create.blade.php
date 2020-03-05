@@ -90,6 +90,22 @@
         @error('password_confirmation')
         <div class="text-danger">{{ $message }}</div>
         @enderror
+        <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="subject_id">Subject</label>
+              <select class="form-control" name="subject_id" id="subject_id">
+                @foreach($subjects as $subject)
+                <option value="{{ $subject->id }}" }}>
+                    {{ $subject->name }}
+                </option>
+                @endforeach
+            </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="point">Point</label>
+              <input type="number" class="form-control" id="point" placeholder="point">
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <!-- /.content -->
