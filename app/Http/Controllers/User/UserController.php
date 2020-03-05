@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Jobs\SendMailForExpulsion;
 use App\Repositories\Faculty\FacultyEloquentRepository;
 use App\Repositories\Role\RoleEloquentRepository;
+use  App\Repositories\Point\PointEloquentRepository;
 
 
 class UserController extends Controller
@@ -25,12 +26,13 @@ class UserController extends Controller
     protected $facultyEloquentRepository;
     protected $roleEloquentRepository;
 
-    public function __construct(RepositoryInterface $userEloquentRepository, SubjectEloquentRepository $subjectEloquentRepository, FacultyEloquentRepository  $facultyEloquentRepository, RoleEloquentRepository $roleEloquentRepository)
+    public function __construct(RepositoryInterface $userEloquentRepository, SubjectEloquentRepository $subjectEloquentRepository, FacultyEloquentRepository  $facultyEloquentRepository, RoleEloquentRepository $roleEloquentRepository, PointEloquentRepository $pointEloquentRepository)
     {
         $this->userEloquentRepository = $userEloquentRepository;
         $this->subjectEloquentRepository = $subjectEloquentRepository;
         $this->facultyEloquentRepository = $facultyEloquentRepository;
         $this->roleEloquentRepository = $roleEloquentRepository;
+        $this->pointEloquentRepository = $pointEloquentRepository;
     }
     /**
      * List of user and search user
@@ -83,6 +85,10 @@ class UserController extends Controller
         $req['password'] = bcrypt($req['password']);
         $user = $this->userEloquentRepository->create($req);
         $user->assignRole($req['roles']);
+        $point = $this->pointEloquentRepository->create(['user_id' => $user->id,
+                                                        'subject_id' => $request->subject_id,
+                                                        'point' => $request->point,
+                                                        ]);
         return redirect()->route('users.index')->with('status', 'Create Successfull');
     }
 
@@ -95,8 +101,6 @@ class UserController extends Controller
     public function show($slug)
     {
         $user = $this->userEloquentRepository->getSlug($slug);
-        // dd($collect = collect($user));
-        // dd($user);
         return view('users.show', compact('user'));
     }
 

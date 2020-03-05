@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Repositories\User;
-use Illuminate\Support\Facades\DB;
 use App\Models\Subject;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\EloquentRepository;
 

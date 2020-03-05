@@ -38,11 +38,16 @@ class UpdateUserRequest extends FormRequest
             'password_confirmation' => 'required|required_with:password',
             'avatar' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'roles' => 'required',
+            'subject_id' => 'required|exists:subjects,id',
+            'point' => 'required|min:0|max:10',
         ];
         if(!empty($this->id)){
             $validation['email'] = 'required|email|unique:users,id,' . $this->id;
             $validation['avatar'] = 'mimes:jpeg,png,jpg,gif,svg|max:2048';
             $validation['roles'] = '';
+            $validation['subject_id'] = '';
+            $validation['point'] = '';
+
         }
         // if(!($this->password)){
         //     $validation['password'] = '';

@@ -18,7 +18,8 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\User\UserEloquentRepository::class,
             \App\Repositories\User\SubjectEloquentRepository::class,
             \App\Repositories\User\FacultyEloquentRepository::class,
-            \App\Repositories\Role\RoleEloquentRepository::class
+            \App\Repositories\Role\RoleEloquentRepository::class,
+            \App\Repositories\Point\PointEloquentRepository::class
         );
     }
 
