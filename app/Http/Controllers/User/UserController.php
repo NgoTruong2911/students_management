@@ -44,7 +44,10 @@ class UserController extends Controller
     {
         request()->flash();
         $paginate = $request->paginate ? $request->paginate : 15;
-        $users = $this->userEloquentRepository->search(request()->all())->orderby('updated_at','desc')->with('rolesName')->paginate($paginate)->appends($request->all());
+        $users = $this->userEloquentRepository->search(request()->all())
+                                            ->orderby('updated_at','desc')
+                                            ->with('rolesName')->paginate($paginate)
+                                            ->appends($request->all());
         if (\Request::is('api*')) {
             return response()->json(compact('users', 'paginate'));
             exit();
@@ -80,7 +83,6 @@ class UserController extends Controller
     public function store(UpdateUserRequest $request)
     {
         $req = $request->all();
-        $req['age'] = Carbon::parse($request->birthday)->age;
         $req['avatar'] = $this->userEloquentRepository->saveImage();
         $req['password'] = bcrypt($req['password']);
         $user = $this->userEloquentRepository->create($req);
@@ -117,6 +119,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+
         $user = $this->userEloquentRepository->authUser();
         $roles = $userRole = null;
         $user_id = strval($user->id);
@@ -256,11 +259,7 @@ class UserController extends Controller
      */
     public function sendEmail()
     {
-        $users = $this->userEloquentRepository->avgPoint(['userSubject' => function ($query) {
-            $query->selectRaw('user_id,AVG(user_subject.point) AS average_point')
-                ->groupBy('user_id')
-                ->havingRaw('average_point < ?', [5]);
-        }]);
+        $users = $this->userEloquentRepository->avgPoint();
         foreach ($users as $user) {
             $job = (new SendMailForExpulsion($user))->delay(Carbon::now()->addMinutes(10));
             dispatch($job);

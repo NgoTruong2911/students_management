@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Repositories\User;
+
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\EloquentRepository;
+use Carbon\Carbon;
 
 class UserEloquentRepository extends EloquentRepository
 {
@@ -58,23 +60,23 @@ class UserEloquentRepository extends EloquentRepository
         }
         //filter point
         if (!empty($data['age_min']) || !empty($data['age_max'])) {
-
             if (!empty($data['age_min'])) {
-                $users->where('age', '>=', $data['age_min']);
+                $min_year = Carbon::now()->subYear($data['age_min'])->startOfYear()->format('Y-m-d');
+                $users->whereDate('birthday', '<=', $min_year);
             }
-            if (!empty($data['age_max'])) {
-                $users->where('age', '<=', $data['age_max']);
+            if ($data['age_max'] >= 0) {
+                $max_year = Carbon::now()->subYear($data['age_max'])->startOfYear()->format('Y-m-d');
+                $users->whereDate('birthday', '>=',  $max_year);
             }
-
         }
         // filter age
         if (!empty($data['phone_number'])) {
-            foreach ($data['phone_number'] as $phone) {
-                $users->orWhere('phone_number', 'regexp', $phone);
-            }
-
+            $users->where(function ($query) use($data) {
+                foreach ($data['phone_number'] as $phone) {
+                    $query->orWhere('phone_number', 'regexp', $phone);
+                }
+            });
         }
-
         // }
         if (!empty($data['filter_point'])) {
             $subjects = Subject::all()->count(); //tổng số bản ghi của subjects
@@ -82,14 +84,12 @@ class UserEloquentRepository extends EloquentRepository
                 $users->whereHas('subjects', function ($query) use ($data, $subjects) {
 
                     $query->where('point', '>=', 0);
-
                 }, $subjects);
             }
             if ($data['filter_point'] == 2) {
                 $users->whereHas('subjects', function ($query) use ($data, $subjects) {
 
                     $query->where('point', '>=', 0);
-
                 }, '<', $subjects);
             }
         }
@@ -107,7 +107,7 @@ class UserEloquentRepository extends EloquentRepository
 
     public function getSlug($slug)
     {
-        $user =$this->_model->newQuery();
+        $user = $this->_model->newQuery();
         return $user->where('slug', $slug)->first();
     }
 }

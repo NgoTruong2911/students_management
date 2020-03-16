@@ -94,6 +94,7 @@
                 <div class="form-group col-md-6">
                     <label for="subject_id">Subject</label>
                     <select class="form-control" name="subject_id" id="subject_id">
+                        <option value="">Select subject</option>
                         @foreach($subjects as $subject)
                         <option value="{{ $subject->id }}" }}>
                             {{ $subject->name }}

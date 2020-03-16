@@ -5,7 +5,7 @@
         <form action="{{route('subjects.store')}}" method="POST">
             @csrf
             <div class="form-group">
-                <label for="name">Name</label>
+                <label for="name">Name : <a class="text-danger">*</a></label>
                 <input type="text" class="form-control" id="name" value="{{old('name')}}" name="name"
                        placeholder="Enter name">
                 @error('name')
@@ -13,7 +13,7 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">Description : <a class="text-danger">*</a></label>
                 <textarea class="form-control" name="description" id="description"
                           rows="3">{{old('description')}}</textarea>
                 @error('description')

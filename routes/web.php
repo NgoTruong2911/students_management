@@ -18,7 +18,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::post('update/profile', 'User\UserController@updateProfile')->name('users.updateProfile');
     Route::group(['middleware' => 'role:admin'], function () {
         // Route::resource('users', 'User\UserController');
-        
+
         Route::get('users','User\UserController@index')->name('users.index');
         Route::post('users','User\UserController@store')->name('users.store');
         Route::get('users/create','User\UserController@create')->name('users.create');

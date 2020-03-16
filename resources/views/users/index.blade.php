@@ -27,35 +27,35 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="age_form">Age Min</label>
-                    <input type="number" class="form-control" min="0" step="1" id="age_form" value="{{old('age_max')}}"
+                    <input type="number" class="form-control" min="0" step="1" id="age_form" value="{{old('age_min')}}"
                         name="age_min" placeholder="Age from ">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="age_to">Age Max</label>
-                    <input type="number" class="form-control" min="0" step="1" id="age_to" value="{{old('age_min')}}"
+                    <input type="number" class="form-control" min="0" step="1" id="age_to" value="{{old('age_max')}}"
                         name="age_max" placeholder="Age to">
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputAddress2">Phone number : </label>
-                {{-- <select class="form-control" name="network" id="exampleFormControlSelect1">
-                    <option value="^0{1}([3]{1}[2-9]{1}|[9]{1}[6-8]{1})[0-9]{7}$">Viettel</option>
-                    <option value="^0{1}([9]{1}[1,4]{1}|[8]{1}[8]{1})[0-9]{7}$">Vinaphone</option>
-                    <option value="^0{1}([9]{1}[0,3]{1}|[7]{1}[0,1,2,6,8]{1})[0-9]{7}$">Mobifone</option>
-                    </select> --}}
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="phone_number[]" type="checkbox" id="inlineCheckbox1"
-                        value="^0{1}([3]{1}[2-9]{1}|[9]{1}[6-8]{1})[0-9]{7}$">
+                    <input class="form-check-input" name="phone_number[]" @if(is_array(old('phone_number')) &&
+                        in_array('^0{1}([3]{1}[2-9]{1}|[9]{1}[6-8]{1})[0-9]{7}$', old('phone_number'))) checked @endif
+                        type="checkbox" id="inlineCheckbox1" value="^0{1}([3]{1}[2-9]{1}|[9]{1}[6-8]{1})[0-9]{7}$">
                     <label class="form-check-label" for="inlineCheckbox1">Viettel</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="phone_number[]" type="checkbox" id="inlineCheckbox2"
-                        value="^0{1}([9]{1}[1,4]{1}|[8]{1}[8]{1})[0-9]{7}$">
+                    <input class="form-check-input" name="phone_number[]" @if(is_array(old('phone_number')) &&
+                        in_array('^0{1}([9]{1}[1,4]{1}|[8]{1}[8]{1}|[8]{1}[1-5]{1})[0-9]{7}$', old('phone_number')))
+                        checked @endif type="checkbox" id="inlineCheckbox2"
+                        value="^0{1}([9]{1}[1,4]{1}|[8]{1}[8]{1}|[8]{1}[1-5]{1})[0-9]{7}$">
                     <label class="form-check-label" for="inlineCheckbox2">Vinaphone</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" name="phone_number[]" type="checkbox" id="inlineCheckbox3"
-                        value="^0{1}([9]{1}[0,3]{1}|[7]{1}[0,1,2,6,8]{1})[0-9]{7}$">
+                    <input class="form-check-input" name="phone_number[]" @if(is_array(old('phone_number')) &&
+                        in_array('^0{1}([9]{1}[0,3]{1}|[7]{1}[0,1,2,6,8,9,7]{1})[0-9]{7}$', old('phone_number')))
+                        checked @endif type="checkbox" id="inlineCheckbox3"
+                        value="^0{1}([9]{1}[0,3]{1}|[7]{1}[0,1,2,6,8,9,7]{1})[0-9]{7}$">
                     <label class="form-check-label" for="inlineCheckbox3">Mobiphone</label>
                 </div>
             </div>
@@ -63,8 +63,10 @@
                 <label for="exampleFormControlSelect1">Điểm :</label>
                 <select class="form-control" name="filter_point" id="exampleFormControlSelect1">
                     <option value="">Tất cả</option>
-                    <option value="1">Đã hoàn thành</option>
-                    <option value="2">Còn nợ môn</option>
+                    <option @if(old('filter_point') && old('filter_point')==1) selected="selected" @endif value="1">Đã
+                        hoàn thành</option>
+                    <option @if(old('filter_point') && old('filter_point')==2) selected="selected" @endif value="2">Còn
+                        nợ môn</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
@@ -91,6 +93,7 @@
                 <th scope="col">Email</th>
                 <th scope="col">Avatar</th>
                 <th scope="col">Gender</th>
+                <th scope="col">Age</th>
                 <th scope="col">Role</th>
                 @if(Auth::user()->hasPermissionTo('users-create'))
                 <th scope="col"><a href="{{ route('users.create') }}" class="btn btn-success">Add +</a></th>
@@ -110,6 +113,13 @@
                 <td>{{ $user->email }}</td>
                 <td><img src="{{ asset($user->avatar) }}" alt="image" height="50" width="50"></td>
                 <td>{{ $user->gender==2?'Male':'Female' }}</td>
+                <td>
+                    @if(!empty($user->birthday))
+                    {{ \Carbon\Carbon::parse($user->birthday)->age }}
+                    @else
+                    {{ 0 }}
+                    @endif
+                </td>
                 <td>
                     @foreach($user->rolesName as $role)
                     <a>{{$role->name}}</a>

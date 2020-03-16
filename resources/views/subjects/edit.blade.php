@@ -6,7 +6,7 @@
             @csrf
             @method('PUT')
             <div class="form-group">
-                <label for="name">Name : </label>
+                <label for="name">Name : <a class="text-danger">*</a> </label>
                 <input type="text" class="form-control" value="{{ old('name',$subject->name) }}" id="name" name="name"
                        placeholder="Enter name">
                 @error('name')
@@ -14,7 +14,7 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="description">Description : </label>
+                <label for="description">Description : <a class="text-danger">*</a></label>
                 <textarea class="form-control" name="description" id="description"
                           rows="3">{{old('description',$subject->description)}}</textarea>
                 @error('description')

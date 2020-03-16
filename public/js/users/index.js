@@ -44,6 +44,8 @@
         $(document).on('click', '.save-update', function () {
             let form = document.getElementById('update_user');
             let formData = new FormData(form);
+            var date = new Date();
+            var nowYear = date.getFullYear();
             let id = $('input[name="id"]').val();
             $.ajax({
                 type: 'POST',
@@ -54,7 +56,7 @@
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    console.log(data);
+                    console.log(data.birthday);
                     let row = $(`#user-update-${id} td`);
                     $(row[1]).text(data.name);
                     $(row[2]).text(data.birthday);
@@ -66,8 +68,10 @@
                     } else {
                         $(row[6]).text('Male');
                     }
+                    $(row[4]).text(data.email);
+                    $(row[7]).text(nowYear-data.birthday.substr(0,4));
                     if(data.roles){
-                        $(row[7]).text(data.roles[0].name);
+                        $(row[8]).text(data.roles[0].name);
                     }
                     $('#exampleModal').modal('toggle');
 
