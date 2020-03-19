@@ -64,7 +64,7 @@ class UserEloquentRepository extends EloquentRepository
                 $min_year = Carbon::now()->subYear($data['age_min'])->startOfYear()->format('Y-m-d');
                 $users->whereDate('birthday', '<=', $min_year);
             }
-            if ($data['age_max'] >= 0) {
+            if ($data['age_max']!==null && $data['age_max']>=0 ) {
                 $max_year = Carbon::now()->subYear($data['age_max'])->startOfYear()->format('Y-m-d');
                 $users->whereDate('birthday', '>=',  $max_year);
             }

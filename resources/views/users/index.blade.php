@@ -164,16 +164,9 @@
     <div>
         <p>Showing {{$users->firstItem()}} to {{$users->lastItem()}} of {{$users->total()}} </p>
     </div>
-    <div>{{ $users->links() }}</div>
     <!-- /.content -->
 </div>
 @endsection
 @section('script')
 <script src="{{asset('js/users/index.js')}}"></script>
-<script>
-    document.getElementById('paginate').onchange = function() {
-    window.location = "{!!$users->url(1)!!}&paginate=" + this.value;
-    console.log(this.value);
- }
-</script>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Http\Requests\Users\PointRequest;
@@ -42,6 +43,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // dd($request->all());
         request()->flash();
         $paginate = $request->paginate ? $request->paginate : 15;
         $users = $this->userEloquentRepository->search(request()->all())
@@ -278,4 +280,5 @@ class UserController extends Controller
         $user = $this->userEloquentRepository->authUser();
         return view('profile.profile', compact('user'));
     }
+
 }
